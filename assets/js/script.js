@@ -5,6 +5,10 @@ var txtF = "";
 var changed = false;
 var save = true;
 var mainIndex = 0;
+var saveClicked = false;
+var locked = "";
+var unlocked = "";
+
 
 
 //Set current day in header
@@ -155,8 +159,8 @@ $(".seg-input").on("click", "p", function(e) {
     // get current value of textarea
     var txt = $(this).val();
     var idTxt = $(this).parent().attr("id").replace("hr-input", "");
-    var locked = $(this).parent().attr("id").replace("hr-input", "locked");
-    var unlocked = $(this).parent().attr("id").replace("hr-input", "unlocked");
+     locked = $(this).parent().attr("id").replace("hr-input", "locked");
+     unlocked = $(this).parent().attr("id").replace("hr-input", "unlocked");
     
     // recreate p element
     var inputP = $("<p>")
@@ -168,48 +172,51 @@ $(".seg-input").on("click", "p", function(e) {
     txtF = txt;
 
     //check if input changed
-    changedInputCheck(txtp, txtF);
+    changedInputCheck(txtp, txtF, idTxt);
     //debugger;
-
     
     //changeSaveStatus check
     //saveItem(changed, idTxt);
-    console.log(changed)
+    //console.log(changed)
+    
 
-    if ((changed == true && save == false)){
-        //console.log("testing " + idTxt)
-        //console.log("cropped " + unlocked)
-        $("#"+locked).removeClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
-        $("#"+locked).addClass("oi oi-lock-locked d-none")
-        $("#"+unlocked).removeClass("oi oi-lock-unlocked d-none")
-        $("#"+unlocked).addClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
+    lockDisplayFn(changed, idTxt, locked, unlocked);
+
+    // if ((changed == true && changeInInput[idTxt] == true)){
+    //     console.log("testing " + idTxt)
+    //     //console.log("cropped " + unlocked)
+    //     $("#"+locked).removeClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
+    //     $("#"+locked).addClass("oi oi-lock-locked d-none")
+    //     $("#"+unlocked).removeClass("oi oi-lock-unlocked d-none")
+    //     $("#"+unlocked).addClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
         
-    }
-    else if (/*(changed == false && save == true)||*/(save == true)) {
-        //console.log("nothing")
+    // }
+    // else if ((/*changed == false &&*/ changeInInput[idTxt] == false)/*||(save == true)*/) {
+    //     //console.log("nothing")
 
-        $("#"+locked).removeClass("oi oi-lock-locked d-none")
-        $("#"+locked).addClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
-        $("#"+unlocked).removeClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
-        $("#"+unlocked).addClass("oi oi-lock-unlocked d-none")
-        //console.log("cropped " + unlocked)
-    }
+    //     $("#"+locked).removeClass("oi oi-lock-locked d-none")
+    //     $("#"+locked).addClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
+    //     $("#"+unlocked).removeClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
+    //     $("#"+unlocked).addClass("oi oi-lock-unlocked d-none")
+    //     //console.log("cropped " + unlocked)
+    // }
     //debugger;
   });
 
-  function changedInputCheck(txtp, txtF) {
+  function changedInputCheck(txtp, txtF, index) {
     pCheck = txtp;
     fCheck = txtF;
 
     if (pCheck !== fCheck) {
-        console.log("changed")
+        //console.log("changed")
         changed = true;
         save = false;
-        
+        changeInInput[index] = true;
         //unlock image
+        //console.log(changeInInput)
     }
     else {
-        console.log("no change")
+        //console.log("no change")
         changed = false;
         //locked image
     }
@@ -220,19 +227,35 @@ $(".seg-input").on("click", "p", function(e) {
     $(".seg-save").on("click", "p", function(e) {
         e.preventDefault();
         // get current text of p element
-        var txtSave = $(this).val();
-        var idTxt = $(this).parent().attr("id").replace("hr-save", "");
-        console.log("click " + txtSave)
-        console.log("click " + idTxt)
-            
         
-        // replace p element with a new textarea
-       // var txtInput = $("<textarea>").addClass("form-control").val(txt);
-       // $(this).replaceWith(txtInput);
-        
-        // auto focus new element
-    
+        var idSave = $(this).parent().attr("id").replace("hr-save", "");
+        console.log("click " + idSave)
+        changeInInput[idSave] = false;
+        lockDisplayFn(changed, idSave, locked, unlocked)
     });
+
+    function lockDisplayFn(changed, idTxt, locked, unlocked){
+
+        if ((changed == true && changeInInput[idTxt] == true)){
+           // console.log("testing " + idTxt)
+            //console.log("cropped " + unlocked)
+            $("#"+locked).removeClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
+            $("#"+locked).addClass("oi oi-lock-locked d-none")
+            $("#"+unlocked).removeClass("oi oi-lock-unlocked d-none")
+            $("#"+unlocked).addClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
+            
+        }
+        else if ((/*changed == false &&*/ changeInInput[idTxt] == false)/*||(save == true)*/) {
+            console.log(locked)
+    
+            $("#"+locked).removeClass("oi oi-lock-locked d-none")
+            $("#"+locked).addClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
+            $("#"+unlocked).removeClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
+            $("#"+unlocked).addClass("oi oi-lock-unlocked d-none")
+            //console.log("cropped " + unlocked)
+        }
+        
+    }
 
   /*
   var saveTasks = function() {
