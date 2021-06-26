@@ -210,15 +210,15 @@ $(".seg-input").on("click", "p", function(e) {
     
     $(".seg-save").on("click", "p", function(e) {
         e.preventDefault();
-        // get current text of p element
+        // get current index of p element
         var idSave = $(this).parent().attr("id").replace("hr-save", "");
         console.log("click " + idSave)
-        locked = "locked"+idSave;
-        unlocked = "unlocked"+idSave;
-        saveObj.change[idSave] = false;
-        lockDisplayFn(changed, idSave, locked, unlocked);
-
-        
+        if (saveObj.change[idSave] == true) {
+            locked = "locked"+idSave;
+            unlocked = "unlocked"+idSave;
+            saveObj.change[idSave] = false;
+            lockDisplayFn(changed, idSave, locked, unlocked);   
+        }
     });
 
     function lockDisplayFn(changed, idTxt, locked, unlocked){
