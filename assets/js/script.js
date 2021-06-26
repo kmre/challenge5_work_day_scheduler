@@ -4,6 +4,7 @@ var txtp = "";
 var txtF = "";
 var changed = false;
 var save = true;
+var mainIndex = 0;
 
 
 //Set current day in header
@@ -36,7 +37,7 @@ function createDivs() {
         changeInInput[index] = false;
     }
 }
- console.log(changeInInput)
+ //console.log(changeInInput)
 //create div with row class for each index
 function createRowsFn(index) {
     var divCreateRow = $("<div>").addClass("hr-seg row i" + index)
@@ -114,8 +115,7 @@ function spanInputFnLocked(index) {
     var spanBtn = $("<span>").addClass("oi oi-lock-locked d-flex justify-content-center align-items-center i" + index)
     $("#btn-i" + index).append(spanBtn)
     $(spanBtn).attr("id", "locked" + index)
-    //debugger;
-    //$("#locked" + index).attr("hidden", true);
+
 }
 
 //add <span> inside the <i> to add the lock image unlocked
@@ -123,8 +123,7 @@ function spanInputFnUnLocked(index) {
     var spanBtn = $("<span>").addClass(/*oi oi-lock-unlocked d-flex justify-content-center align-items-center*/ "i" + index)
     $("#btn-i" + index).append(spanBtn)
     $(spanBtn).attr("id", "unlocked" + index)
-    //debugger;
-    //$("#unlocked" + index).attr("hidden", false);
+
 }
 
 //run main fns
@@ -132,8 +131,10 @@ setToday();
 
 createDivs();
 
+
 //on click for the <p> in the input segment change <p> to <textarea>
-$(".seg-input").on("click", "p", function() {
+$(".seg-input").on("click", "p", function(e) {
+    e.preventDefault();
     // get current text of p element
     var txt = $(this)
         .text()
@@ -148,13 +149,12 @@ $(".seg-input").on("click", "p", function() {
     txtp = txt;
 });
 
-
   // editable field was un-focused
-  $(".seg-input").on("blur", "textarea", function(event) {
-    event.preventDefault();
+  $(".seg-input").on("blur", "textarea", function(e) {
+    e.preventDefault();
     // get current value of textarea
     var txt = $(this).val();
-    var idTxt = $(this).parent().attr("id");
+    var idTxt = $(this).parent().attr("id").replace("hr-input", "");
     var locked = $(this).parent().attr("id").replace("hr-input", "locked");
     var unlocked = $(this).parent().attr("id").replace("hr-input", "unlocked");
     
@@ -167,14 +167,18 @@ $(".seg-input").on("click", "p", function() {
     $(this).replaceWith(inputP);
     txtF = txt;
 
+    //check if input changed
     changedInputCheck(txtp, txtF);
     //debugger;
-    //changeSaveStatus check
 
+    
+    //changeSaveStatus check
+    //saveItem(changed, idTxt);
+    console.log(changed)
 
     if ((changed == true && save == false)){
-        console.log("testing " + idTxt)
-        console.log("cropped " + unlocked)
+        //console.log("testing " + idTxt)
+        //console.log("cropped " + unlocked)
         $("#"+locked).removeClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
         $("#"+locked).addClass("oi oi-lock-locked d-none")
         $("#"+unlocked).removeClass("oi oi-lock-unlocked d-none")
@@ -182,15 +186,13 @@ $(".seg-input").on("click", "p", function() {
         
     }
     else if (/*(changed == false && save == true)||*/(save == true)) {
-        console.log("nothing")
-        var idTxt = "";
+        //console.log("nothing")
 
         $("#"+locked).removeClass("oi oi-lock-locked d-none")
         $("#"+locked).addClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
         $("#"+unlocked).removeClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
         $("#"+unlocked).addClass("oi oi-lock-unlocked d-none")
-
-        console.log("cropped " + unlocked)
+        //console.log("cropped " + unlocked)
     }
     //debugger;
   });
@@ -202,6 +204,8 @@ $(".seg-input").on("click", "p", function() {
     if (pCheck !== fCheck) {
         console.log("changed")
         changed = true;
+        save = false;
+        
         //unlock image
     }
     else {
@@ -210,6 +214,25 @@ $(".seg-input").on("click", "p", function() {
         //locked image
     }
   }
+
+  /*function saveItem(changed, index) {*/
+    
+    $(".seg-save").on("click", "p", function(e) {
+        e.preventDefault();
+        // get current text of p element
+        var txtSave = $(this).val();
+        var idTxt = $(this).parent().attr("id").replace("hr-save", "");
+        console.log("click " + txtSave)
+        console.log("click " + idTxt)
+            
+        
+        // replace p element with a new textarea
+       // var txtInput = $("<textarea>").addClass("form-control").val(txt);
+       // $(this).replaceWith(txtInput);
+        
+        // auto focus new element
+    
+    });
 
   /*
   var saveTasks = function() {
