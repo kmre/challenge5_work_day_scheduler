@@ -245,7 +245,7 @@ $(".seg-input").on("click", "p", function(e) {
             $("#"+unlocked).addClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
             
         }
-        else if ((/*changed == false &&*/ changeInInput[idTxt] == false)/*||(save == true)*/) {
+        else if ((changed == true && changeInInput[idTxt] == false)/*||(save == true)*/) {
             console.log(locked)
     
             $("#"+locked).removeClass("oi oi-lock-locked d-none")
