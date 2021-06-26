@@ -23,7 +23,11 @@ function createDivs() {
         inputDivFn(index);
         saveDivFn(index);
         inputPFn(index);
-
+        savePFn(index);
+        saveBtnFn(index);
+        btnIFn(index);
+        spanInputFnLocked(index);
+        spanInputFnUnLocked(index);
     }
 }
 
@@ -78,6 +82,42 @@ function saveDivFn(index) {
     var divCreateSave = $("<div>").addClass("seg-save col-2 i" + index)
     $("#independent-rows" + index).append(divCreateSave)
     $(divCreateSave).attr("id", "hr-save" + index)
+    //debugger;
+}
+
+function savePFn(index) {
+    var pSave = $("<p>").addClass("p-save i" + index)
+    $("#hr-save" + index).append(pSave)
+    $(pSave).attr("id", "save-p" + index)
+}
+
+//add div for save section to the row class
+function saveBtnFn(index) {
+    
+    var btnSave = $("<button>").addClass("saveBtn")
+    $("#save-p" + index).append(btnSave)
+    $(btnSave).attr("id", "btn-save" + index)
+    
+}
+
+function btnIFn(index) {
+    var btnI = $("<i>").addClass("iBtn")
+    $("#btn-save" + index).append(btnI)
+    $(btnI).attr("id", "btn-i" + index)
+    
+}
+
+function spanInputFnLocked(index) {
+    var spanBtn = $("<span>").addClass("oi oi-lock-locked d-flex justify-content-center align-items-center i" + index)
+    $("#btn-i" + index).append(spanBtn)
+    $(spanBtn).attr("id", "locked" + index)
+    //debugger;
+}
+
+function spanInputFnUnLocked(index) {
+    var spanBtn = $("<span>").addClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center i" + index)
+    $("#btn-i" + index).append(spanBtn)
+    $(spanBtn).attr("id", "unlocked" + index)
     //debugger;
 }
 
@@ -286,3 +326,5 @@ setInterval(function() {
   });
 }, ((60*1000)*min));
   */
+
+//Referenced code from Module
