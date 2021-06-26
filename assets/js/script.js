@@ -1,6 +1,9 @@
-var tasks = {};
-var segments = [];
 var segmentByHour = [];
+var changeInInput = [];
+var txtp = "";
+var txtF = "";
+var changed = false;
+
 
 //Set current day in header
 function setToday(params) {
@@ -27,18 +30,18 @@ function createDivs() {
         saveBtnFn(index);
         btnIFn(index);
         spanInputFnLocked(index);
-        spanInputFnUnLocked(index);
+        //spanInputFnUnLocked(index);
+
+        changeInInput[index] = false;
     }
 }
-
+ console.log(changeInInput)
 //create div with row class for each index
 function createRowsFn(index) {
-
     var divCreateRow = $("<div>").addClass("hr-seg row i" + index)
     $("#main-container").append(divCreateRow)
     $(divCreateRow).attr("id", "independent-rows" + index)
     //debugger;
-    
 }
 
 //add the hr div to the row class
@@ -73,40 +76,39 @@ function inputPFn(index) {
     $("#hr-input" + index).append(inputP)
     $(inputP).attr("id", "input-p" + index)
     $("#input-p" + index).text("")
-
     //debugger;
 }
 
 //add div for save section to the row class
 function saveDivFn(index) {
-    var divCreateSave = $("<div>").addClass("seg-save col-2 i" + index)
+    var divCreateSave = $("<div>").addClass("seg-save col-2 d-flex align-items-center justify-content-center i" + index)
     $("#independent-rows" + index).append(divCreateSave)
     $(divCreateSave).attr("id", "hr-save" + index)
     //debugger;
 }
 
+//add <p> to the save section
 function savePFn(index) {
-    var pSave = $("<p>").addClass("p-save i" + index)
+    var pSave = $("<p>").addClass("p-save width i" + index)
     $("#hr-save" + index).append(pSave)
     $(pSave).attr("id", "save-p" + index)
 }
 
-//add div for save section to the row class
+//add butoon for the save section inside p
 function saveBtnFn(index) {
-    
     var btnSave = $("<button>").addClass("saveBtn")
     $("#save-p" + index).append(btnSave)
     $(btnSave).attr("id", "btn-save" + index)
-    
 }
 
+//add <i> to the save section inside button
 function btnIFn(index) {
     var btnI = $("<i>").addClass("iBtn")
     $("#btn-save" + index).append(btnI)
     $(btnI).attr("id", "btn-i" + index)
-    
 }
 
+//add <span> inside the <i> to add the lock image locked
 function spanInputFnLocked(index) {
     var spanBtn = $("<span>").addClass("oi oi-lock-locked d-flex justify-content-center align-items-center i" + index)
     $("#btn-i" + index).append(spanBtn)
@@ -114,12 +116,13 @@ function spanInputFnLocked(index) {
     //debugger;
 }
 
-function spanInputFnUnLocked(index) {
+//add <span> inside the <i> to add the lock image unlocked
+/*function spanInputFnUnLocked(index) {
     var spanBtn = $("<span>").addClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center i" + index)
     $("#btn-i" + index).append(spanBtn)
     $(spanBtn).attr("id", "unlocked" + index)
     //debugger;
-}
+}*/
 
 //run main fns
 setToday();
@@ -139,103 +142,61 @@ $(".seg-input").on("click", "p", function() {
     
     // auto focus new element
     txtInput.trigger("focus");
-    console.log(txtInput)
+    txtp = txt;
+
+    //changedInputCheck(txtp, txtF);
 });
 
 
   // editable field was un-focused
   $(".seg-input").on("blur", "textarea", function() {
-  // get current value of textarea
-  var txt = $(this).val();
+    // get current value of textarea
+    var txt = $(this).val();
+    var idTest = $(this).parent().attr("id");
+    // recreate p element
+    var inputP = $("<p>")
+        .addClass("w-100 h-100 p-2 border border-light .bg-light shadow-sm d-flex align-items-center justify-content-center")
+        .text(txt);
 
-  // get status type and position in the list
-  /*
-  var status = $(this)
-    .closest(".list-group")
-    .attr("id")
-    .replace("list-", "");
-  var index = $(this)
-    .closest(".list-group-item")
-    .index();
-  */
-
-  // update task in array and re-save to localstorage
-  /*
-  tasks[status][index].text = txt;
-  saveTasks();
-  */
-
-  // recreate p element
-  var inputP = $("<p>")
-    .addClass("w-100 h-100 p-2 border border-light .bg-light shadow-sm d-flex align-items-center justify-content-center")
-    .text(txt);
-
-  // replace textarea with new content
-  $(this).replaceWith(inputP);
-  });
-  
-    // update task in array and re-save to localstorage
-    
-    /*tasks.text = text;
-    
-    
-    saveTasks();
-  
-    //recreate p element
-    var taskP = $("<p>")
-      .addClass("")
-      .text(text);
-  
     // replace textarea with new content
-    $(this).replaceWith(taskP);
-    console.log(taskP)
+    $(this).replaceWith(inputP);
+    txtF = txt;
+
    
-  });*/
+
+    changedInputCheck(txtp, txtF);
+    if (changed == true){
+
+        console.log("testing " + idTest)
 
 
-
-
-
-/*segmentByHour = {
-    hour : info.c.hour,
-    totalInterval : 24,
-    
-};*/
-
-//console.log(segmentByHour.totalInterval)
-
-//var createTask = function(taskText, taskDate) {
-
-
-    //return  setHours;
-
-    // check due date
-    //auditTask(taskLi);
-  
-    // append to ul list on the page
-    //$("#list-" + taskList).append(taskLi);
-  //};
-  /*
-  var loadTasks = function() {
-    tasks = JSON.parse(localStorage.getItem("tasks"));
-  
-    // if nothing in localStorage, create a new object to track time
-    if (!tasks) {
-      tasks = {
-        time: []
-      };
     }
-  
-    // loop over object properties
-    $.each(tasks, function(list, arr) {
-      // then loop over sub-array
-      arr.forEach(function(task) {
-        createTask(task.text, task.date, list);
-      });
-    });
-  };
-  */
- /*
+    else {
+        console.log("nothing")
+        var idTest = "";
+    }
+    
+  });
+
+  function changedInputCheck(txtp, txtF) {
+    pCheck = txtp;
+    fCheck = txtF;
+
+    if (pCheck !== fCheck) {
+        console.log("changed")
+        changed = true;
+
+        //unlock image
+    }
+    else {
+        console.log("no change")
+        changed = false;
+
+        //locked image
+    }
+  }
+
+  /*
   var saveTasks = function() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   };
@@ -246,21 +207,9 @@ $(".seg-input").on("click", "p", function() {
       .find("span")
       .text()
       .trim();
+  }
   */
-    // convert to moment object at 5:00pm
- /*   var time = moment(date, "L").set("hour", 17);
-  
-    // remove any old classes from element
-    $(taskEl).removeClass("list-group-item-warning list-group-item-danger");
-  
-    // apply new class if task is near/over due date
-    if (moment().isAfter(time)) {
-      $(taskEl).addClass("list-group-item-danger");
-    } else if (Math.abs(moment().diff(time, "days")) <= 2) {
-      $(taskEl).addClass("list-group-item-warning");
-    }
-  };
-  */
+
 //////////////////////////////////////////////////////////////////////////////////////
 /*
 // task segment was clicked
