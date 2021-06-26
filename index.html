@@ -28,22 +28,21 @@
     <header class="jumbotron">
       <h1 class="display-3">Work Day Scheduler</h1>
       <p class="lead">A simple calendar app for scheduling your work day</p>
-      <p id="currentDay" class="lead"> Here goes the current date </p>
+      <p id="currentDay" class="lead">Today is: </p>
     </header>
 
-    <main class="container time-block">
-      <!-- Timeblocks go here -->
+    <main id="main-container" class="container time-block">
+      <!-- Timeblocks go here 
       <div class="hr-seg row">
 
-        <div class="seg-time col-4 d-flex justify-content-center align-items-center">
-          <p>here goes the time</p>
+        <div id="hr-time" class="seg-time col-4 d-flex justify-content-center align-items-center">
         </div>
 
-        <div class="seg-input col-4 d-flex justify-content-center align-items-center">
+        <div id="hr-input" class="seg-input col-4 d-flex justify-content-center align-items-center">
           <p>Here is the editable field</p>
         </div>
 
-        <div class="seg-save col-4">
+        <div id="hr-save" class="seg-save col-4">
           <p>
             <button class="saveBtn">
               <i>
@@ -51,7 +50,7 @@
                 </span>
               </i>
             </button>
-          </p>
+          </p>-->
           <!--
           <p>
             <button class="saveBtn">
@@ -68,13 +67,14 @@
       </div>
 
     </main>
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/1.27.0/luxon.min.js" integrity="sha512-cQXElo4AdS11Wtr5GFBmliue0OBZIhJjcSOSmF3RASBNfJMrkhF/F5JknHUm9klwHLLVG5+oiV6INy/yjgYPoA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./assets/js/script.js"></script>
   </body>
 </html>
