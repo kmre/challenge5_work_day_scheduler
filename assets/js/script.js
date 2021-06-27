@@ -1,4 +1,4 @@
- 
+
 var segmentByHour = [];
 var changeInInput = [];
 var txtp = "";
@@ -40,7 +40,7 @@ function saveChanges(index) {
     console.log(existing)
 
 
-    for (let q = 0; q < 23; q++) {
+    for (let q = 0; q < 24; q++) {
         
         if (saveObj.input[q] == null) {
             saveObj.input[q] = "";
@@ -275,4 +275,3 @@ $(".seg-input").on("click", "p", function(e) {
         }
         
     }
-
