@@ -35,13 +35,28 @@ createDivs();
 function saveChanges(index) {
    
     var existing = localStorage.getItem('saveObj');
-    console.log(existing)
+    console.log(saveObj.input)
     var existing = existing ? JSON.parse(existing) : {};
     console.log(existing)
+
+
+    for (let q = 0; q < 23; q++) {
+        
+        if (saveObj.input[q] == null) {
+            saveObj.input[q] = "";
+        }
+    }
     existing["input"] = saveObj.input;
     console.log(saveObj)
     localStorage.setItem("saveObj", JSON.stringify(saveObj));
-   
+}
+
+window.addEventListener('DOMContentLoaded', displaySavedObj);
+
+function displaySavedObj() {
+
+
+
 }
 
 //create divs for every hr of the day and run other fn
@@ -64,7 +79,7 @@ function createDivs() {
         spanInputFnLocked(index);
         spanInputFnUnLocked(index);
         saveObj.change[index] = false;
-        saveObj.input[index] = "";
+        //saveObj.input[index] = "";
         //saveChanges(index); 
         //console.log("finish get saved Data"+saveObj)
     }
@@ -95,6 +110,7 @@ function hrPFn(index) {
         $("#hr-time" + index).append(hrP)
         $(hrP).attr("id", "p-times" + index)
         //saveObj.hr[index] = segmentByHour[index]
+        //console.log($("#p-time" + index))
 }
 
 //add div for input section to the row class
@@ -110,8 +126,8 @@ function inputPFn(index) {
     var inputP = $("<p>").addClass("w-100 h-100 p-2 border border-light .bg-light shadow-sm d-flex align-items-center justify-content-center")
     $("#hr-input" + index).append(inputP)
     $(inputP).attr("id", "input-p" + index)
-    $("#input-p" + index).text("")
-    
+    $("#input-p" + index).text(saveObj.input[index])
+    //console.log($("testing" + "#input-p" + index))
     //debugger;
 }
 
