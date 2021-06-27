@@ -11,6 +11,7 @@ var locked = "";
 var unlocked = "";
 var idTxt = "";
 var newText = "";
+var existing;
 
 
 var saveObj = {
@@ -34,9 +35,9 @@ createDivs();
 
 function saveChanges(index) {
    
-    var existing = localStorage.getItem('saveObj');
+    existing = localStorage.getItem('saveObj');
     console.log(saveObj.input)
-    var existing = existing ? JSON.parse(existing) : {};
+    existing = existing ? JSON.parse(existing) : {};
     console.log(existing)
 
 
@@ -48,6 +49,7 @@ function saveChanges(index) {
     }
     existing["input"] = saveObj.input;
     console.log(saveObj)
+    console.log(existing)
     localStorage.setItem("saveObj", JSON.stringify(saveObj));
 }
 
@@ -55,8 +57,29 @@ window.addEventListener('DOMContentLoaded', displaySavedObj);
 
 function displaySavedObj() {
 
+    existing = localStorage.getItem('saveObj');
+    console.log(saveObj.input)
+    console.log(existing)
+    console.log(existing==existing)
+    debugger;
+    existing = existing ? JSON.parse(existing) : existing = saveObj;
+    console.log(existing)
 
 
+    for (let q = 0; q < 24; q++) {
+        if (saveObj.input[q] == null && existing.input[q] == null) {
+            saveObj.input[q] = "";
+        }
+    }
+    saveObj = existing;
+    console.log(saveObj)
+    console.log(existing)
+    console.log(existing["input"])
+    localStorage.setItem("saveObj", JSON.stringify(saveObj));
+
+    for (let t = 0; t < 24; t++) {
+        $("#input-p" + t).text(saveObj.input[t])
+    }
 }
 
 //create divs for every hr of the day and run other fn
