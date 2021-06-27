@@ -13,14 +13,12 @@ var idTxt = "";
 var newText = "";
 var existing;
 
-
 var saveObj = {
     hr: [],
     input: [],
     change: [],
-    today: moment().format('MMMM Do YYYY, h:mm:ss a')
+    today: moment().format('MMMM Do YYYY, h:mm A')
   };
-
 
 //Set current day in header
 function setToday(params) { 
@@ -30,16 +28,43 @@ function setToday(params) {
 
 //run main fns
 setToday();
-
 createDivs();
 
-function saveChanges(index) {
-   
-    existing = localStorage.getItem('saveObj');
-    console.log(saveObj.input)
-    existing = existing ? JSON.parse(existing) : {};
-    console.log(existing)
+function checkTimes() {
+    //debugger;
+        for (let t = 0; t < 24; t++) {
+            
+            if (saveObj.input[t] !== "") {
+             console.log(saveObj.input[t])   
+            var todayCheck =  moment().format('HH');
+            var endTime = t; 
+            var hrNow = parseInt(todayCheck) 
+            console.log(hrNow)
+            console.log(endTime)
+            var checkHr = endTime - hrNow;
 
+                if ((checkHr > 2)) {
+                
+                    console.log("green")
+                }
+                else if ((checkHr <= 2) && (0 < checkHr)) {
+                    console.log("yellow")
+                }
+
+                else if ((checkHr <= 0)) {
+                    console.log("gray")
+                }
+            }
+        }
+  };
+  
+  setInterval(function(){checkTimes()}, ((3000)))
+
+function saveChanges(index) {
+    existing = localStorage.getItem('saveObj');
+    //console.log(saveObj.input)
+    existing = existing ? JSON.parse(existing) : {};
+   // console.log(existing)
 
     for (let q = 0; q < 24; q++) {
         
@@ -48,8 +73,8 @@ function saveChanges(index) {
         }
     }
     existing["input"] = saveObj.input;
-    console.log(saveObj)
-    console.log(existing)
+   // console.log(saveObj)
+   // console.log(existing)
     localStorage.setItem("saveObj", JSON.stringify(saveObj));
 }
 
@@ -58,13 +83,12 @@ window.addEventListener('DOMContentLoaded', displaySavedObj);
 function displaySavedObj() {
 
     existing = localStorage.getItem('saveObj');
-    console.log(saveObj.input)
-    console.log(existing)
-    console.log(existing==existing)
-    debugger;
+  //  console.log(saveObj.input)
+   // console.log(existing)
+   // console.log(existing==existing)
+   // debugger;
     existing = existing ? JSON.parse(existing) : existing = saveObj;
-    console.log(existing)
-
+   // console.log(existing)
 
     for (let q = 0; q < 24; q++) {
         if (saveObj.input[q] == null && existing.input[q] == null) {
@@ -72,14 +96,15 @@ function displaySavedObj() {
         }
     }
     saveObj = existing;
-    console.log(saveObj)
-    console.log(existing)
-    console.log(existing["input"])
+   // console.log(saveObj)
+   // console.log(existing)
+   // console.log(existing["input"])
     localStorage.setItem("saveObj", JSON.stringify(saveObj));
 
     for (let t = 0; t < 24; t++) {
         $("#input-p" + t).text(saveObj.input[t])
     }
+    checkTimes();
 }
 
 //create divs for every hr of the day and run other fn
@@ -102,9 +127,6 @@ function createDivs() {
         spanInputFnLocked(index);
         spanInputFnUnLocked(index);
         saveObj.change[index] = false;
-        //saveObj.input[index] = "";
-        //saveChanges(index); 
-        //console.log("finish get saved Data"+saveObj)
     }
 }
  //console.log(changeInInput)
@@ -199,8 +221,6 @@ function spanInputFnUnLocked(index) {
 
 }
 
-
-
 //on click for the <p> in the input segment change <p> to <textarea>
 $(".seg-input").on("click", "p", function(e) {
     e.preventDefault();
@@ -270,8 +290,8 @@ $(".seg-input").on("click", "p", function(e) {
             locked = "locked"+idSave;
             unlocked = "unlocked"+idSave;
             saveObj.change[idSave] = false;
-            console.log(newText)
-            console.log(idSave)
+            //console.log(newText)
+            //console.log(idSave)
             lockDisplayFn(changed, idSave, locked, unlocked);
             saveObj.input[idSave] = newText;
             saveChanges();
@@ -298,3 +318,5 @@ $(".seg-input").on("click", "p", function(e) {
         }
         
     }
+
+// referenced module 5 for portions of the code
