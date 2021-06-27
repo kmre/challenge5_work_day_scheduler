@@ -16,12 +16,8 @@ var saveObj = {
     input: [],
     change: [],
     today: moment().format('MMMM Do YYYY, h:mm:ss a')
-}
-
-console.log(saveObj)
-var saveInputs = function() {
-    localStorage.setItem("changeInInput", JSON.stringify(tasks));
   };
+
 
 //Set current day in header
 function setToday(params) { 
@@ -29,13 +25,24 @@ function setToday(params) {
     $("#currentDay").append(saveObj.today);
 }
 
+//run main fns
+setToday();
+
+createDivs();
+
+function saveChanges(index) {
+
+    localStorage.setItem("saveObj", JSON.stringify(saveObj));
+    //localStorage.setItem("saveObj", JSON.stringify(saveObj.input[index]));
+}
+
 //create divs for every hr of the day and run other fn
 function createDivs() {
     new Array(24).fill().forEach((value, index) => {
-        segmentByHour.push(moment( {hour: index} ).format('h:mm A'));
+        saveObj.hr.push(moment( {hour: index} ).format('h:mm A'));
     })
-
-    for (let index = 0; index <= 23; index++) {
+    //console.log(saveObj)
+    for (let index = 0; index <= saveObj.hr.length - 1; index++) {
         //debugger;
         createRowsFn(index);
         hrDivFn(index);
@@ -49,7 +56,9 @@ function createDivs() {
         spanInputFnLocked(index);
         spanInputFnUnLocked(index);
         saveObj.change[index] = false;
-        console.log(saveObj.change[index])
+        saveObj.input[index] = "";
+        //saveChanges(index); 
+        //console.log("finish get saved Data"+saveObj)
     }
 }
  //console.log(changeInInput)
@@ -72,12 +81,12 @@ function hrDivFn(index) {
 //add the hr time to each hr div
 function hrPFn(index) {
     var hrP = $("<p>").addClass("time-by-hr i" + index)
-        .text(segmentByHour[index])
+        .text(saveObj.hr[index])
         //console.log(hrP)
         //console.log(segmentByHour[index])
         $("#hr-time" + index).append(hrP)
         $(hrP).attr("id", "p-times" + index)
-        saveObj.hr[index] = segmentByHour[index]
+        //saveObj.hr[index] = segmentByHour[index]
 }
 
 //add div for input section to the row class
@@ -143,10 +152,7 @@ function spanInputFnUnLocked(index) {
 
 }
 
-//run main fns
-setToday();
 
-createDivs();
 
 //on click for the <p> in the input segment change <p> to <textarea>
 $(".seg-input").on("click", "p", function(e) {
@@ -212,12 +218,13 @@ $(".seg-input").on("click", "p", function(e) {
         e.preventDefault();
         // get current index of p element
         var idSave = $(this).parent().attr("id").replace("hr-save", "");
-        console.log("click " + idSave)
+        //console.log("click " + idSave)
         if (saveObj.change[idSave] == true) {
             locked = "locked"+idSave;
             unlocked = "unlocked"+idSave;
             saveObj.change[idSave] = false;
-            lockDisplayFn(changed, idSave, locked, unlocked);   
+            lockDisplayFn(changed, idSave, locked, unlocked);
+            saveChanges(idSave);
         }
     });
 
@@ -232,8 +239,8 @@ $(".seg-input").on("click", "p", function(e) {
         }
         //display locked
         else if ((/*changed == true &&*/ saveObj.change[idTxt] == false)) {
-            console.log("array"+saveObj.change[idTxt])
-            console.log("locked"+locked)
+            //console.log("array"+saveObj.change[idTxt])
+            //console.log("locked"+locked)
             $("#"+locked).removeClass("oi oi-lock-locked d-none")
             $("#"+locked).addClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
             $("#"+unlocked).removeClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
