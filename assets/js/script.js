@@ -30,6 +30,7 @@ function setToday(params) {
 setToday();
 createDivs();
 
+
 function checkTimes() {
     //debugger;
         for (let t = 0; t < 24; t++) {
@@ -44,21 +45,29 @@ function checkTimes() {
             var checkHr = endTime - hrNow;
 
                 if ((checkHr > 2)) {
-                
+                    $("#input-p" + t).removeClass("past present future")
+                    $("#input-p" + t).addClass("future")
                     console.log("green")
                 }
                 else if ((checkHr <= 2) && (0 < checkHr)) {
+                    $("#input-p" + t).removeClass("past present future")
+                    $("#input-p" + t).addClass("present")
                     console.log("yellow")
                 }
 
                 else if ((checkHr <= 0)) {
+                    $("#input-p" + t).removeClass("past present future")
+                    $("#input-p" + t).addClass("past")
+                    $("#input-p" + t).attr("disabled", true)
                     console.log("gray")
+
                 }
+
             }
         }
-  };
+};
   
-  setInterval(function(){checkTimes()}, ((3000)))
+  //setInterval(function(){checkTimes()}, ((60*1000)*30))
 
 function saveChanges(index) {
     existing = localStorage.getItem('saveObj');
@@ -75,7 +84,9 @@ function saveChanges(index) {
     existing["input"] = saveObj.input;
    // console.log(saveObj)
    // console.log(existing)
+  // debugger;
     localStorage.setItem("saveObj", JSON.stringify(saveObj));
+    checkTimes();
 }
 
 window.addEventListener('DOMContentLoaded', displaySavedObj);
@@ -83,12 +94,7 @@ window.addEventListener('DOMContentLoaded', displaySavedObj);
 function displaySavedObj() {
 
     existing = localStorage.getItem('saveObj');
-  //  console.log(saveObj.input)
-   // console.log(existing)
-   // console.log(existing==existing)
-   // debugger;
     existing = existing ? JSON.parse(existing) : existing = saveObj;
-   // console.log(existing)
 
     for (let q = 0; q < 24; q++) {
         if (saveObj.input[q] == null && existing.input[q] == null) {
@@ -96,9 +102,7 @@ function displaySavedObj() {
         }
     }
     saveObj = existing;
-   // console.log(saveObj)
-   // console.log(existing)
-   // console.log(existing["input"])
+
     localStorage.setItem("saveObj", JSON.stringify(saveObj));
 
     for (let t = 0; t < 24; t++) {
@@ -112,9 +116,8 @@ function createDivs() {
     new Array(24).fill().forEach((value, index) => {
         saveObj.hr.push(moment( {hour: index} ).format('h:mm A'));
     })
-    //console.log(saveObj)
+
     for (let index = 0; index <= saveObj.hr.length - 1; index++) {
-        //debugger;
         createRowsFn(index);
         hrDivFn(index);
         hrPFn(index);
@@ -129,13 +132,11 @@ function createDivs() {
         saveObj.change[index] = false;
     }
 }
- //console.log(changeInInput)
-//create div with row class for each index
+
 function createRowsFn(index) {
     var divCreateRow = $("<div>").addClass("hr-seg row i" + index)
     $("#main-container").append(divCreateRow)
     $(divCreateRow).attr("id", "independent-rows" + index)
-    //debugger;
 }
 
 //add the hr div to the row class
@@ -143,7 +144,6 @@ function hrDivFn(index) {
     var divCreateHr = $("<div>").addClass("seg-time col-2 d-flex justify-content-center align-items-center hour shadow-sm i" + index)
     $("#independent-rows" + index).append(divCreateHr)
     $(divCreateHr).attr("id", "hr-time" + index)
-    //debugger;
 }
 
 //add the hr time to each hr div
@@ -154,8 +154,6 @@ function hrPFn(index) {
         //console.log(segmentByHour[index])
         $("#hr-time" + index).append(hrP)
         $(hrP).attr("id", "p-times" + index)
-        //saveObj.hr[index] = segmentByHour[index]
-        //console.log($("#p-time" + index))
 }
 
 //add div for input section to the row class
@@ -172,8 +170,7 @@ function inputPFn(index) {
     $("#hr-input" + index).append(inputP)
     $(inputP).attr("id", "input-p" + index)
     $("#input-p" + index).text(saveObj.input[index])
-    //console.log($("testing" + "#input-p" + index))
-    //debugger;
+
 }
 
 //add div for save section to the row class
@@ -215,7 +212,7 @@ function spanInputFnLocked(index) {
 
 //add <span> inside the <i> to add the lock image unlocked
 function spanInputFnUnLocked(index) {
-    var spanBtn = $("<span>").addClass(/*oi oi-lock-unlocked d-flex justify-content-center align-items-center*/ "i" + index)
+    var spanBtn = $("<span>").addClass("i" + index)
     $("#btn-i" + index).append(spanBtn)
     $(spanBtn).attr("id", "unlocked" + index)
 
@@ -232,10 +229,17 @@ $(".seg-input").on("click", "p", function(e) {
     // replace p element with a new textarea
     var txtInput = $("<textarea>").addClass("form-control").val(txt);
     $(this).replaceWith(txtInput);
-    
+    checkTimes();
     // auto focus new element
     txtInput.trigger("focus");
     txtp = txt;
+    var pidTxt = $(this).parent().attr("id").replace("hr-input", "");
+
+    changedInputCheck(txtp, txtF, pidTxt);
+    if (saveObj.change[pidTxt] == true) {
+
+        lockDisplayFn(changed, pidTxt, locked, unlocked);
+    }
 });
 
   // editable field was un-focused
@@ -250,17 +254,22 @@ $(".seg-input").on("click", "p", function(e) {
     // recreate p element
     var inputP = $("<p>")
         .addClass("w-100 h-100 p-2 border border-light .bg-light shadow-sm d-flex align-items-center justify-content-center")
-        .text(txt);
-
+        .text(txt)
+        .attr("id", "input-p" + idTxt);
+        
     // replace textarea with new content
     $(this).replaceWith(inputP);
     txtF = txt;
     
     //check if input changed
     changedInputCheck(txtp, txtF, idTxt);
+    if (saveObj.change[idTxt] == true) {
 
+        lockDisplayFn(changed, idTxt, locked, unlocked);
+
+    }
     //check locks change
-    lockDisplayFn(changed, idTxt, locked, unlocked);
+  
 
   });
 
@@ -283,24 +292,21 @@ $(".seg-input").on("click", "p", function(e) {
     
     $(".seg-save").on("click", "p", function(e) {
         e.preventDefault();
-        // get current index of p element
         var idSave = $(this).parent().attr("id").replace("hr-save", "");
-        //console.log("click " + idSave)
         if (saveObj.change[idSave] == true) {
             locked = "locked"+idSave;
             unlocked = "unlocked"+idSave;
             saveObj.change[idSave] = false;
-            //console.log(newText)
-            //console.log(idSave)
             lockDisplayFn(changed, idSave, locked, unlocked);
             saveObj.input[idSave] = newText;
             saveChanges();
+            checkTimes();
         }
     });
 
     function lockDisplayFn(changed, idTxt, locked, unlocked){
         //display unlocked
-        if ((/*changed == true &&*/ saveObj.change[idTxt] == true)){
+        if ((saveObj.change[idTxt] == true)){
             $("#"+locked).removeClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
             $("#"+locked).addClass("oi oi-lock-locked d-none")
             $("#"+unlocked).removeClass("oi oi-lock-unlocked d-none")
@@ -308,9 +314,8 @@ $(".seg-input").on("click", "p", function(e) {
             
         }
         //display locked
-        else if ((/*changed == true &&*/ saveObj.change[idTxt] == false)) {
-            //console.log("array"+saveObj.change[idTxt])
-            //console.log("locked"+locked)
+        else if ((saveObj.change[idTxt] == false)) {
+
             $("#"+locked).removeClass("oi oi-lock-locked d-none")
             $("#"+locked).addClass("oi oi-lock-locked d-flex justify-content-center align-items-center")
             $("#"+unlocked).removeClass("oi oi-lock-unlocked d-flex justify-content-center align-items-center")
