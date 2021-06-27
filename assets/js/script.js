@@ -1,3 +1,4 @@
+  
 var segmentByHour = [];
 var changeInInput = [];
 var txtp = "";
@@ -9,6 +10,7 @@ var saveClicked = false;
 var locked = "";
 var unlocked = "";
 var idTxt = "";
+var newText = "";
 
 
 var saveObj = {
@@ -31,6 +33,9 @@ setToday();
 createDivs();
 
 function saveChanges(index) {
+
+    //var savedItems = JSON.parse(localStorage.getItem("savedItems")); 
+
 
     localStorage.setItem("saveObj", JSON.stringify(saveObj));
     //localStorage.setItem("saveObj", JSON.stringify(saveObj.input[index]));
@@ -188,8 +193,7 @@ $(".seg-input").on("click", "p", function(e) {
     // replace textarea with new content
     $(this).replaceWith(inputP);
     txtF = txt;
-    saveObj.input[idTxt] = txtF;
-
+    
     //check if input changed
     changedInputCheck(txtp, txtF, idTxt);
 
@@ -207,6 +211,7 @@ $(".seg-input").on("click", "p", function(e) {
         changed = true;
         save = false;
         saveObj.change[index] = true;
+        newText = txtF;  
     }
     else {
         changed = false;
@@ -223,8 +228,11 @@ $(".seg-input").on("click", "p", function(e) {
             locked = "locked"+idSave;
             unlocked = "unlocked"+idSave;
             saveObj.change[idSave] = false;
+            console.log(newText)
+            console.log(idSave)
             lockDisplayFn(changed, idSave, locked, unlocked);
-            saveChanges(idSave);
+            saveObj.input[idSave] = newText;
+            saveChanges();
         }
     });
 
@@ -302,13 +310,10 @@ $(".seg-input").on("click", "p", function() {
     console.log(taskP)
    
   });
-
   // load tasks for the first time
 //loadTasks();
-
 // audit task due dates every x min
 var min = 30;
-
 setInterval(function() {
   $(".card .list-group-item").each(function() {
     auditTask($(this));
